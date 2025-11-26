@@ -1,4 +1,5 @@
 from django.views.generic import DetailView, ListView, CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
@@ -15,29 +16,29 @@ from .models import Reporte, Alumno
 from .forms import ReporteForm, AlumnoForm
 from django.contrib.auth.decorators import login_required
 
-class AlumnoListView(ListView):
+class AlumnoListView(LoginRequiredMixin, ListView):
     model = Alumno
     template_name = 'lista_alumnos.html'
     context_object_name = 'alumnos'
 
-class AlumnoCreateView(CreateView):
+class AlumnoCreateView(LoginRequiredMixin, CreateView):
     model = Alumno
     form_class = AlumnoForm
     template_name = 'crear_alumno.html'
     success_url = reverse_lazy('informes:lista_alumnos')
 
-class ReporteListView(ListView):
+class ReporteListView(LoginRequiredMixin, ListView):
     model = Reporte
     template_name = 'lista_reportes.html'
     context_object_name = 'reportes'
 
-class ReporteCreateView(CreateView):
+class ReporteCreateView(LoginRequiredMixin, CreateView):
     model = Reporte
     form_class = ReporteForm
     template_name = 'crear_reporte.html'
     success_url = reverse_lazy('informes:lista_reportes')
 
-class ReporteDetailView(DetailView):
+class ReporteDetailView(LoginRequiredMixin, DetailView):
     model = Reporte
     template_name = 'detalle_reporte.html'
     context_object_name = 'reporte'
