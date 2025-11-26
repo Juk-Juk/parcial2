@@ -12,13 +12,19 @@ from reportlab.lib import colors
 from reportlab.lib.enums import TA_CENTER, TA_LEFT
 from io import BytesIO
 from .models import Reporte, Alumno
-from .forms import ReporteForm
+from .forms import ReporteForm, AlumnoForm
 from django.contrib.auth.decorators import login_required
 
 class AlumnoListView(ListView):
     model = Alumno
     template_name = 'lista_alumnos.html'
     context_object_name = 'alumnos'
+
+class AlumnoCreateView(CreateView):
+    model = Alumno
+    form_class = AlumnoForm
+    template_name = 'crear_alumno.html'
+    success_url = reverse_lazy('informes:lista_alumnos')
 
 class ReporteListView(ListView):
     model = Reporte

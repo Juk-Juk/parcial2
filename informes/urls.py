@@ -6,6 +6,7 @@ app_name = 'informes'
 urlpatterns = [
     path('', views.ReporteListView.as_view(), name='lista_reportes'),
     path('alumnos/', views.AlumnoListView.as_view(), name='lista_alumnos'),
+    path('alumno/crear/', views.AlumnoCreateView.as_view(), name='crear_alumno'),    
     path('reporte/crear/', views.ReporteCreateView.as_view(), name='crear_reporte'),
     path('reporte/<int:id>/', views.ReporteDetailView.as_view(), name='detalle_reporte'),
     path('reporte/<int:id>/pdf/', views.generar_pdf, name='generar_pdf'),
