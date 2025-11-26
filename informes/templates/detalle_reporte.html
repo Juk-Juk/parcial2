@@ -15,7 +15,11 @@
                 <a class="nav-link" href="{% url 'informes:lista_alumnos' %}">Alumnos</a>
                 <a class="nav-link" href="{% url 'scraper:buscar' %}">Buscador</a>
                 <a class="nav-link" href="{% url 'estadisticas:dashboard' %}">Estadísticas</a>
+                {% if user.is_authenticated %}
                 <a class="nav-link" href="{% url 'cuentas:logout' %}">Cerrar Sesión</a>
+                {% else %}
+                <a class="nav-link" href="{% url 'cuentas:logout' %}">Iniciar Sesión</a>
+                {% endif %}
             </div>
         </div>
     </nav>
