@@ -11,21 +11,32 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+import environ
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+env = environ.Env()
+environ.Env.read_env(BASE_DIR / ".env")
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-+#vh8p0y^)@4)5zvj*g-$(6gwug^jj#ytkd1g&(g0h(8qmkonn'
+SECRET_KEY = env("SECRET_KEY", default="dev-secret")
+DEBUG = env("DEBUG", default = True)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = []
+RENDER_EXTERNAL_HOSTNAME = env("RENDER_EXTERNAL_HOSTNAME")
+
+if DEBUG==False:
+	ALLOWED_HOSTS = [RENDER_EXTERNAL_HOSTNAME]
+else:
+   	ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
 
 # Application definition
@@ -52,6 +63,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'estadisticas.middleware.VisitaMiddleware',
+	'django.middleware.security.SecurityMiddleware',
+	'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'parcial_alumnos.urls'
@@ -77,12 +90,17 @@ WSGI_APPLICATION = 'parcial_alumnos.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+if DEBUG==False:
+   	DATABASES = {
+        	"default": dj_database_url.config(default=env("DATABASE_URL"), conn_max_age=600)
+    	}
+else:
+   	DATABASES = {
+        	'default': {
+            	'ENGINE': 'django.db.backends.sqlite3',
+            	'NAME': BASE_DIR / 'db.sqlite3',
+        	}
+    	}
 
 
 # Password validation
