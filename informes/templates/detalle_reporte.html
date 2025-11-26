@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ reporte.nombre }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'informes:lista_reportes' %}">Sistema de Informes</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="{% url 'informes:lista_alumnos' %}">Alumnos</a>
+                <a class="nav-link" href="{% url 'scraper:buscar' %}">Buscador</a>
+                <a class="nav-link" href="{% url 'estadisticas:dashboard' %}">Estadísticas</a>
+                <a class="nav-link" href="{% url 'cuentas:logout' %}">Cerrar Sesión</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                        <h2 class="mb-0"><i class="bi bi-file-earmark-text"></i> Reporte</h2>
+                        <div>
+                            <a href="{% url 'informes:generar_pdf' reporte.id %}" class="btn btn-danger me-2" target="_blank">
+                                <i class="bi bi-file-pdf"></i> Ver PDF
+                            </a>
+                            <a href="{% url 'informes:enviar_pdf' reporte.id %}" class="btn btn-success">
+                                <i class="bi bi-envelope"></i> Enviar por Email
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title mb-4">{{ reporte.nombre }}</h3>
+                        
+                        <div class="alert alert-light border">
+                            <h5 class="mb-3"><i class="bi bi-person"></i> Datos del Alumno</h5>
+                            <table class="table table-sm table-borderless mb-0">
+                                <tr>
+                                    <td><strong>Nombre:</strong></td>
+                                    <td>{{ reporte.alumno.nombre }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Matrícula:</strong></td>
+                                    <td>{{ reporte.alumno.matricula }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Carrera:</strong></td>
+                                    <td>{{ reporte.alumno.carrera }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Email:</strong></td>
+                                    <td>{{ reporte.alumno.email }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Fecha Ingreso:</strong></td>
+                                    <td>{{ reporte.alumno.fecha_ingreso|date:"d/m/Y" }}</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <p class="text-muted mb-4">
+                            <i class="bi bi-calendar3"></i> Fecha de creación: {{ reporte.fecha|date:"d/m/Y H:i" }}
+                        </p>
+                        <hr>
+                        <div class="mt-4">
+                            <h5 class="mb-3">Contenido:</h5>
+                            <p style="white-space: pre-wrap;">{{ reporte.contenido }}</p>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{% url 'informes:lista_reportes' %}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Volver a la lista
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
